@@ -1,13 +1,49 @@
 package com.example.touristguide_2.repository;
 
 import com.example.touristguide_2.model.TouristAttraction;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class TouristRepository {
+    // Opret DataSource manuelt
+    static DataSource dataSource_attractions = new DriverManagerDataSource(
+            "jdbc:mysql://localhost:3306/attractions",
+            "root",
+            "Kode");
+
+    // Opret DataSource manuelt
+    static DataSource dataSource_tags = new DriverManagerDataSource(
+            "jdbc:mysql://localhost:3306/tags",
+            "root",
+            "Kode");
+
+    // Opret DataSource manuelt
+    static DataSource dataSource_cities = new DriverManagerDataSource(
+            "jdbc:mysql://localhost:3306/cities",
+            "root",
+            "Kode");
+
+    // Opret JdbcTemplate med DataSource
+    static JdbcTemplate jdbcTemplate_attractions = new JdbcTemplate(dataSource_attractions);
+
+    // Opret JdbcTemplate med DataSource
+    static JdbcTemplate jdbcTemplate_tags = new JdbcTemplate(dataSource_tags);
+
+    // Opret JdbcTemplate med DataSource
+    static JdbcTemplate jdbcTemplate_cities = new JdbcTemplate(dataSource_cities);
+
+    static public void InsertAttraction(){
+        // Indsæt testdata (undgå duplikerede data ved at bruge INSERT IGNORE)
+        jdbcTemplate_attractions.update("INSERT IGNORE INTO attractions (id, name, description, tags_matching_ID) VALUES (?, ?)",
+                1, "Jens");
+    }
+
     ArrayList<TouristAttraction> attractionList = new ArrayList<>();
     List<String> tagList = new ArrayList<>();
     List<String> cityList = new ArrayList<>();
