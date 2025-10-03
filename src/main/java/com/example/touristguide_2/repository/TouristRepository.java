@@ -49,19 +49,53 @@ public class TouristRepository {
     }
 
     public List<String> getTags() {
+        ArrayList<String> tags = new ArrayList<>();
 
-        return tagList;
+        SqlRowSet tagRows = jdbcTemplate.queryForRowSet("SELECT * from tags");
+
+        while(tagRows.next()){
+            String tagName = tagRows.getString("name");
+
+            tags.add(tagName);
+        }
+        return tags;
     }
 
     public List<String> getCityList() {
+        ArrayList<String> cities = new ArrayList<>();
 
-        return cityList;
+        SqlRowSet cityRows = jdbcTemplate.queryForRowSet("SELECT * from cities");
+
+        while(cityRows.next()){
+            String tagName = cityRows.getString("name");
+
+            cities.add(tagName);
+        }
+        return cities;
     }
 
     public TouristAttraction getAttractionByName(String name) {
-        for (TouristAttraction attraction : attractionList) {
-            if (attraction.getName().equalsIgnoreCase(name))
-                return attraction;
+        SqlRowSet attractionRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractions");
+
+        while(attractionRows.next()){
+            String attractionName = attractionRows.getString("name");
+
+            if(attractionName.equalsIgnoreCase(name)){
+                ArrayList<String> tags = new ArrayList<>();
+
+                SqlRowSet attractionTagRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractiontags");
+
+                while(attractionTagRows.next()){
+                    String tagKey = attractionTagRows.getString("tagKey");
+
+                    tags.add(tagKey);
+                }
+
+                String description = attractionRows.getString("description");
+                String city = attractionRows.getString("city");
+
+                return new TouristAttraction(name, description, city, tags);
+            }
         }
         return null;
     }
