@@ -6,7 +6,7 @@ name: Build and deploy JAR app to Azure Web App - tourist-guide
 on:
   push:
     branches:
-      - main
+      - database
   workflow_dispatch:
 
 jobs:
@@ -27,8 +27,8 @@ jobs:
       - name: Build with Maven
         env:
           PROD_DATABASE_URL: ${{secrets.PROD_DATABASE_URL}}
-          PROD_USERNAME:  ${{secrets.PROD_USERNAME}}
-          PROD_PASSWORD:  ${{secrets.PROD_PASSWORD}}
+          PROD_USERNAME: ${{secrets.PROD_USERNAME}}
+          PROD_PASSWORD: ${{secrets.PROD_PASSWORD}}
 
         run: mvn clean install
 
@@ -54,9 +54,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CE7B3880AD264D2D9C762B2DA2A7CC49 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_547B594B848E417FBBCE269CADBD743F }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BDB1BFAA9DFB4395A121C0034905B2C1 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F0FE160D85EF4BFC8BDADC3CA50790B1 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D82E2A5E5BEA4A92914C5AAF54B5A2CF }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A35817D75708441CAD4BEF19764CAC4E }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp

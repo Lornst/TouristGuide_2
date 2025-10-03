@@ -1,90 +1,131 @@
 package com.example.touristguide_2.repository;
 
 import com.example.touristguide_2.model.TouristAttraction;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class TouristRepository {
+    private JdbcTemplate jdbcTemplate;
+
     ArrayList<TouristAttraction> attractionList = new ArrayList<>();
-    List<String> tagList = new ArrayList<>();
-    List<String> cityList = new ArrayList<>();
 
-    public TouristRepository() {
-        attractionList.add(new TouristAttraction("Tivoli", "Dansk forlystelsespark", "København", List.of("Koncert", "Runes tag")));
-        attractionList.add(new TouristAttraction("Rundetårn", "Tårn placeret i centrum af København", "København ", List.of("Koncert", "Yac tag")));
-        attractionList.add(new TouristAttraction("Parken", "Hjem til Danmarks bedste fodboldklub", "København", List.of("Hardcodet tag", "Koncert")));
-        attractionList.add(new TouristAttraction("Lille havfrue", "Historisk statue", "Hvidovre", List.of("Tag test 4", "Hej med dig min ven")));
-
-
-        tagList.add("Underholdning");
-        tagList.add("Koncert");
-        tagList.add("Børnevenligt");
-        tagList.add("Natur");
-        tagList.add("Museum");
-
-        cityList.add("København");
-        cityList.add("Stenløse");
-        cityList.add("Odense");
-        cityList.add("AAlborg");
-        cityList.add("Randers");
-        cityList.add("Hvidovre");
+    public TouristRepository(JdbcTemplate template) {
+        this.jdbcTemplate = template;
     }
 
     public ArrayList<TouristAttraction> getAll() {
+        ArrayList<TouristAttraction> attractions = new ArrayList<>();
 
+        SqlRowSet attractionRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractions");
 
-        return attractionList;
+        while (attractionRows.next()) {
+            ArrayList<String> tags = new ArrayList<>();
+
+            SqlRowSet attractionTagRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractiontags");
+
+            while(attractionTagRows.next()){
+                String tagKey = attractionTagRows.getString("tagKey");
+
+                tags.add(tagKey);
+            }
+
+            int ID = attractionRows.getInt("id");
+            String name = attractionRows.getString("name");
+            String description = attractionRows.getString("description");
+            String city = attractionRows.getString("city");
+            attractions.add(new TouristAttraction(ID, name, description, city, tags));
+        }
+
+        return attractions;
     }
 
     public List<String> getTags() {
+        ArrayList<String> tags = new ArrayList<>();
 
-        return tagList;
+        SqlRowSet tagRows = jdbcTemplate.queryForRowSet("SELECT * from tags");
+
+        while(tagRows.next()){
+            String tagName = tagRows.getString("name");
+
+            tags.add(tagName);
+        }
+        return tags;
     }
 
     public List<String> getCityList() {
+        ArrayList<String> cities = new ArrayList<>();
 
-        return cityList;
+        SqlRowSet cityRows = jdbcTemplate.queryForRowSet("SELECT * from cities");
+
+        while(cityRows.next()){
+            String tagName = cityRows.getString("name");
+
+            cities.add(tagName);
+        }
+        return cities;
     }
 
     public TouristAttraction getAttractionByName(String name) {
-        for (TouristAttraction attraction : attractionList) {
-            if (attraction.getName().equalsIgnoreCase(name))
-                return attraction;
+        SqlRowSet attractionRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractions");
+
+        while(attractionRows.next()){
+            String attractionName = attractionRows.getString("name");
+
+            if(attractionName.equalsIgnoreCase(name)){
+                ArrayList<String> tags = new ArrayList<>();
+
+                SqlRowSet attractionTagRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractiontags");
+
+                while(attractionTagRows.next()){
+                    String tagKey = attractionTagRows.getString("tagKey");
+
+                    tags.add(tagKey);
+                }
+
+                int ID = attractionRows.getInt("id");
+                String description = attractionRows.getString("description");
+                String city = attractionRows.getString("city");
+
+                return new TouristAttraction(ID, name, description, city, tags);
+            }
         }
         return null;
     }
 
-    public TouristAttraction addAttraction(TouristAttraction attraction) {
+    public void addAttraction(TouristAttraction attraction) {
+        jdbcTemplate.update("insert into attractions (name, description, city) values (?,?,?)",
+                attraction.getName(), attraction.getDescription(), attraction.getCity());
 
-        attractionList.add(attraction);
-        return attraction;
+        for(String tag : attraction.getTags()){
+            jdbcTemplate.update("insert into attractionTags (attractionKey, tagKey) values (?,?)",
+                    attraction.getName(), tag);
+        }
     }
 
-    public TouristAttraction editAttraction(String nameID, TouristAttraction attraction) {
-        TouristAttraction tempAttraction = getAttractionByName(nameID);
 
-        if (tempAttraction != null) {
-            tempAttraction.setName(attraction.getName());
-            tempAttraction.setDescription(attraction.getDescription());
-            tempAttraction.setCity(attraction.getCity());
-            tempAttraction.setTags(attraction.getTags());
+    public void editAttraction(TouristAttraction attraction) {
+        jdbcTemplate.update("update attractions set name = ?, description = ?, city = ? where id = ?",
+                attraction.getName(), attraction.getDescription(), attraction.getCity(), attraction.getID());
 
-            return tempAttraction;
+        jdbcTemplate.update("delete from attractiontags where attractionKey = ?", attraction.getID());
+
+        for(String tag : attraction.getTags()){
+            jdbcTemplate.update("insert into attractiontags (attractionKey, tagKey) values (?,?)",
+                    attraction.getID(), tag);
         }
-        return null;
     }
 
-    public TouristAttraction deleteAttraction(String name) {
-        if (!(name == null)) {
-            TouristAttraction tempAttraction = getAttractionByName(name);
-            attractionList.remove(tempAttraction);
+    public void deleteAttraction(TouristAttraction attraction) {
+        jdbcTemplate.update("delete from attractions where id = ?", attraction.getID());
 
-            return tempAttraction;
-        }
-
-        return null;
+        jdbcTemplate.update("delete from attractiontags where attractionKey = ?", attraction.getID());
     }
 }
