@@ -34,7 +34,7 @@ public class TouristRepository {
             SqlRowSet attractionTagRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractiontags");
 
             while(attractionTagRows.next()){
-                String tagKey = attractionTagRows.getString("attractionKey");
+                String tagKey = attractionTagRows.getString("tagKey");
 
                 tags.add(tagKey);
             }
