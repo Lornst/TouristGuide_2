@@ -23,13 +23,13 @@ public class TouristRepository {
         this.jdbcTemplate = template;
     }
 
-    public List<TouristAttraction> getAll() {
-        List<TouristAttraction> attractions = new ArrayList<>();
+    public ArrayList<TouristAttraction> getAll() {
+        ArrayList<TouristAttraction> attractions = new ArrayList<>();
 
         SqlRowSet attractionRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractions");
 
         while (attractionRows.next()) {
-            List<String> tags = new ArrayList<>();
+            ArrayList<String> tags = new ArrayList<>();
 
             SqlRowSet attractionTagRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractiontags");
 
