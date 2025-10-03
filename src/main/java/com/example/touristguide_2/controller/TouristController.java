@@ -59,14 +59,15 @@ public class TouristController {
     }
 
     @PostMapping("/{nameID}/edit")
-    public String editAttraction(@PathVariable String nameID, TouristAttraction attraction) {
-        touristService.editAttraction(nameID, attraction);
+    public String editAttraction(TouristAttraction attraction) {
+        touristService.editAttraction(attraction);
         return "redirect:/attraction/list";
     }
 
     @GetMapping("/{name}/delete")
     public String deleteAttraction(@PathVariable String name) {
-        touristService.deleteAttraction(name);
+        TouristAttraction attraction = touristService.getAttractionByName(name);
+        touristService.deleteAttraction(attraction);
         return "redirect:/attraction/list";
     }
 

@@ -4,17 +4,23 @@ import java.util.List;
 
 public class TouristAttraction {
 
+    private int ID;
     private String name;
     private String description;
     private List<String> tags;
     private String city;
 
-    public TouristAttraction(String name, String description, String city, List<String> tags) {
+    public TouristAttraction(int ID, String name, String description, String city, List<String> tags) {
+        this.ID = ID;
         this.name = name;
         this.description = description;
         this.city = city;
         this.tags = tags;
 
+    }
+
+    public int getID(){
+        return ID;
     }
 
     public List<String> getTags() {
@@ -23,10 +29,6 @@ public class TouristAttraction {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public String getRegisterBy() {
-        return city;
     }
 
     public void setCity(String city) {

@@ -37,10 +37,11 @@ public class TouristRepository {
                 tags.add(tagKey);
             }
 
+            int ID = attractionRows.getInt("id");
             String name = attractionRows.getString("name");
             String description = attractionRows.getString("description");
             String city = attractionRows.getString("city");
-            attractions.add(new TouristAttraction(name, description, city, tags));
+            attractions.add(new TouristAttraction(ID, name, description, city, tags));
         }
 
         return attractions;
@@ -89,10 +90,11 @@ public class TouristRepository {
                     tags.add(tagKey);
                 }
 
+                int ID = attractionRows.getInt("id");
                 String description = attractionRows.getString("description");
                 String city = attractionRows.getString("city");
 
-                return new TouristAttraction(name, description, city, tags);
+                return new TouristAttraction(ID, name, description, city, tags);
             }
         }
         return null;
@@ -109,28 +111,21 @@ public class TouristRepository {
     }
 
 
-    public TouristAttraction editAttraction(String nameID, TouristAttraction attraction) {
-        TouristAttraction tempAttraction = getAttractionByName(nameID);
+    public void editAttraction(TouristAttraction attraction) {
+        jdbcTemplate.update("update attractions set name = ?, description = ?, city = ? where id = ?",
+                attraction.getName(), attraction.getDescription(), attraction.getCity(), attraction.getID());
 
-        if (tempAttraction != null) {
-            tempAttraction.setName(attraction.getName());
-            tempAttraction.setDescription(attraction.getDescription());
-            tempAttraction.setCity(attraction.getCity());
-            tempAttraction.setTags(attraction.getTags());
+        jdbcTemplate.update("delete from attractiontags where attractionKey = ?", attraction.getID());
 
-            return tempAttraction;
+        for(String tag : attraction.getTags()){
+            jdbcTemplate.update("insert into attractiontags (attractionKey, tagKey) values (?,?)",
+                    attraction.getID(), tag);
         }
-        return null;
     }
 
-    public TouristAttraction deleteAttraction(String name) {
-        if (!(name == null)) {
-            TouristAttraction tempAttraction = getAttractionByName(name);
-            attractionList.remove(tempAttraction);
+    public void deleteAttraction(TouristAttraction attraction) {
+        jdbcTemplate.update("delete from attractions where id = ?", attraction.getID());
 
-            return tempAttraction;
-        }
-
-        return null;
+        jdbcTemplate.update("delete from attractiontags where attractionKey = ?", attraction.getID());
     }
 }
