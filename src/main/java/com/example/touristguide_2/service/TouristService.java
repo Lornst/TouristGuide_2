@@ -31,10 +31,8 @@ public class TouristService {
         return touristRepository.getAttractionByName(name);
     }
 
-    public TouristAttraction addAttraction(TouristAttraction attraction) {
-
-        return touristRepository.addAttraction(attraction);
-
+    public void addAttraction(TouristAttraction attraction) {
+        touristRepository.addAttraction(attraction);
     }
 
     public TouristAttraction deleteAttraction(String name) {

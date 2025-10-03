@@ -16,8 +16,6 @@ public class TouristRepository {
     private JdbcTemplate jdbcTemplate;
 
     ArrayList<TouristAttraction> attractionList = new ArrayList<>();
-    List<String> tagList = new ArrayList<>();
-    List<String> cityList = new ArrayList<>();
 
     public TouristRepository(JdbcTemplate template) {
         this.jdbcTemplate = template;
@@ -100,10 +98,14 @@ public class TouristRepository {
         return null;
     }
 
-    public TouristAttraction addAttraction(TouristAttraction attraction) {
+    public void addAttraction(TouristAttraction attraction) {
+        jdbcTemplate.update("insert into attractions (name, description, city) values (?,?,?)",
+                attraction.getName(), attraction.getDescription(), attraction.getCity());
 
-        attractionList.add(attraction);
-        return attraction;
+        for(String tag : attraction.getTags()){
+            jdbcTemplate.update("insert into attractionTags (attractionKey, tagKey) values (?,?)",
+                    attraction.getName(), tag);
+        }
     }
 
 
