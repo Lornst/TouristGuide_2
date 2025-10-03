@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public class TouristRepository {
-    // Opret DataSource manuelt
+    /*// Opret DataSource manuelt
     static DataSource dataSource_attractions = new DriverManagerDataSource(
             "jdbc:mysql://localhost:3306/attractions",
             "root",
@@ -29,20 +29,32 @@ public class TouristRepository {
             "root",
             "Kode");
 
-    // Opret JdbcTemplate med DataSource
-    static JdbcTemplate jdbcTemplate_attractions = new JdbcTemplate(dataSource_attractions);
+    // Opret DataSource manuelt
+    static DataSource dataSource_connection = new DriverManagerDataSource(
+            "jdbc:mysql://localhost:3306/attraction_tag_connection",
+            "root",
+            "Kode");
 
     // Opret JdbcTemplate med DataSource
-    static JdbcTemplate jdbcTemplate_tags = new JdbcTemplate(dataSource_tags);
+    static JdbcTemplate attractions = new JdbcTemplate(dataSource_attractions);
 
     // Opret JdbcTemplate med DataSource
-    static JdbcTemplate jdbcTemplate_cities = new JdbcTemplate(dataSource_cities);
+    static JdbcTemplate tags = new JdbcTemplate(dataSource_tags);
 
-    static public void InsertAttraction(){
+    // Opret JdbcTemplate med DataSource
+    static JdbcTemplate cities = new JdbcTemplate(dataSource_cities);
+
+    static JdbcTemplate connection = new JdbcTemplate(dataSource_connection);
+
+    static public void InsertAttraction(String name, String description, int IDcity){
         // Indsæt testdata (undgå duplikerede data ved at bruge INSERT IGNORE)
-        jdbcTemplate_attractions.update("INSERT IGNORE INTO attractions (id, name, description, tags_matching_ID) VALUES (?, ?)",
-                1, "Jens");
+        attractions.update("insert ignore into attractions (name, description, city_foreign_key) values(?,?,?)", name, description, IDcity);
+        connection.update("insert ignore into attraction_tag_connection(attraction_foreign_key, tag_foreign_key) values((select IDattraction from attractions where attractions.name = ?"),?)");
     }
+
+    static public void pullAttraction(){
+
+    }*/
 
     ArrayList<TouristAttraction> attractionList = new ArrayList<>();
     List<String> tagList = new ArrayList<>();
@@ -98,6 +110,7 @@ public class TouristRepository {
         attractionList.add(attraction);
         return attraction;
     }
+
 
     public TouristAttraction editAttraction(String nameID, TouristAttraction attraction) {
         TouristAttraction tempAttraction = getAttractionByName(nameID);
