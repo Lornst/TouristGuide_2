@@ -2,7 +2,9 @@ package com.example.touristguide_2.repository;
 
 import com.example.touristguide_2.model.TouristAttraction;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -11,80 +13,39 @@ import java.util.List;
 
 @Repository
 public class TouristRepository {
-    /*// Opret DataSource manuelt
-    static DataSource dataSource_attractions = new DriverManagerDataSource(
-            "jdbc:mysql://localhost:3306/attractions",
-            "root",
-            "Kode");
-
-    // Opret DataSource manuelt
-    static DataSource dataSource_tags = new DriverManagerDataSource(
-            "jdbc:mysql://localhost:3306/tags",
-            "root",
-            "Kode");
-
-    // Opret DataSource manuelt
-    static DataSource dataSource_cities = new DriverManagerDataSource(
-            "jdbc:mysql://localhost:3306/cities",
-            "root",
-            "Kode");
-
-    // Opret DataSource manuelt
-    static DataSource dataSource_connection = new DriverManagerDataSource(
-            "jdbc:mysql://localhost:3306/attraction_tag_connection",
-            "root",
-            "Kode");
-
-    // Opret JdbcTemplate med DataSource
-    static JdbcTemplate attractions = new JdbcTemplate(dataSource_attractions);
-
-    // Opret JdbcTemplate med DataSource
-    static JdbcTemplate tags = new JdbcTemplate(dataSource_tags);
-
-    // Opret JdbcTemplate med DataSource
-    static JdbcTemplate cities = new JdbcTemplate(dataSource_cities);
-
-    static JdbcTemplate connection = new JdbcTemplate(dataSource_connection);
-
-    static public void InsertAttraction(String name, String description, int IDcity){
-        // Indsæt testdata (undgå duplikerede data ved at bruge INSERT IGNORE)
-        attractions.update("insert ignore into attractions (name, description, city_foreign_key) values(?,?,?)", name, description, IDcity);
-        connection.update("insert ignore into attraction_tag_connection(attraction_foreign_key, tag_foreign_key) values((select IDattraction from attractions where attractions.name = ?"),?)");
-    }
-
-    static public void pullAttraction(){
-
-    }*/
+    private JdbcTemplate jdbcTemplate;
 
     ArrayList<TouristAttraction> attractionList = new ArrayList<>();
     List<String> tagList = new ArrayList<>();
     List<String> cityList = new ArrayList<>();
 
-    public TouristRepository() {
-        attractionList.add(new TouristAttraction("Tivoli", "Dansk forlystelsespark", "København", List.of("Koncert", "Runes tag")));
-        attractionList.add(new TouristAttraction("Rundetårn", "Tårn placeret i centrum af København", "København ", List.of("Koncert", "Yac tag")));
-        attractionList.add(new TouristAttraction("Parken", "Hjem til Danmarks bedste fodboldklub", "København", List.of("Hardcodet tag", "Koncert")));
-        attractionList.add(new TouristAttraction("Lille havfrue", "Historisk statue", "Hvidovre", List.of("Tag test 4", "Hej med dig min ven")));
-
-
-        tagList.add("Underholdning");
-        tagList.add("Koncert");
-        tagList.add("Børnevenligt");
-        tagList.add("Natur");
-        tagList.add("Museum");
-
-        cityList.add("København");
-        cityList.add("Stenløse");
-        cityList.add("Odense");
-        cityList.add("AAlborg");
-        cityList.add("Randers");
-        cityList.add("Hvidovre");
+    public TouristRepository(JdbcTemplate template) {
+        this.jdbcTemplate = template;
     }
 
-    public ArrayList<TouristAttraction> getAll() {
+    public List<TouristAttraction> getAll() {
+        List<TouristAttraction> attractions = new ArrayList<>();
 
+        SqlRowSet attractionRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractions");
 
-        return attractionList;
+        while (attractionRows.next()) {
+            List<String> tags = new ArrayList<>();
+
+            SqlRowSet attractionTagRows = jdbcTemplate.queryForRowSet("SELECT * FROM attractiontags");
+
+            while(attractionTagRows.next()){
+                String tagKey = attractionTagRows.getString("attractionKey");
+
+                tags.add(tagKey);
+            }
+
+            String name = attractionRows.getString("name");
+            String description = attractionRows.getString("description");
+            String city = attractionRows.getString("city");
+            attractions.add(new TouristAttraction(name, description, city, tags));
+        }
+
+        return attractions;
     }
 
     public List<String> getTags() {
