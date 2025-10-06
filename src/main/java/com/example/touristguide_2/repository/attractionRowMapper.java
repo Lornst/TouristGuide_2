@@ -1,6 +1,5 @@
 package com.example.touristguide_2.repository;
 
-import com.example.touristguide_2.model.Tag;
 import com.example.touristguide_2.model.TouristAttraction;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -8,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 class attractionRowMapper implements RowMapper<TouristAttraction> {
     JdbcTemplate jdbcTemplate;
@@ -25,7 +23,7 @@ class attractionRowMapper implements RowMapper<TouristAttraction> {
         attraction.setDescription(rs.getString("attractions.description"));
 
         List<String> attractionTags = jdbcTemplate.queryForList(
-                "select tagKey from attractiontags join tags on tags.id = attractiontags.tagKey where attractionKey = ?",
+                "select tagKey from attractiontags where attractionKey = ?",
                         String.class, rs.getString("attractions.name"));
 
         attraction.setTags(attractionTags);

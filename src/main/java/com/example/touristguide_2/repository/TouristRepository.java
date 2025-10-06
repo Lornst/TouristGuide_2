@@ -34,7 +34,7 @@ public class TouristRepository {
     }
 
     public TouristAttraction getAttraction(TouristAttraction attraction) {
-        return jdbcTemplate.queryForObject("select * from attractions where id = ?", new attractionRowMapper(jdbcTemplate), attraction.getID());
+        return jdbcTemplate.queryForObject("select * from attractions where name = ?", new attractionRowMapper(jdbcTemplate), attraction.getName());
     }
 
     public void addAttraction(TouristAttraction attraction) {

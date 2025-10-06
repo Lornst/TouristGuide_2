@@ -15,13 +15,23 @@
         <td th:text="${attraction.name}"></td>
         <td th:text="${attraction.description}"></td>
         <td>
-            <a th:href="@{/attraction/update}" th:object="attraction"><button>Opdater</button></a>
+            <form action="#" th:action="@{/attraction/update}" th:object="${attraction}" method="post">
+                <input type="hidden" th:field="*{name}"/>
+                <input type="hidden" th:field="*{description}"/>
+                <input type="hidden" th:field="*{city}"/>
+
+                <button type="submit">Opdater</button>
+            </form>
         </td>
         <td>
-            <a th:href="@{/attraction/delete}" th:object="attraction"><button>Slet</button></a>
+            <form action="#" th:action="@{/attraction/delete}" th:object="${attraction}" method="post">
+                <button type="submit">Slet</button>
+            </form>
         </td>
         <td>
-            <a th:href="@{/attraction/tags}" th:object="attraction"><button>Tags</button></a>
+            <form action="#" th:action="@{/attraction/tags}" th:object="${attraction}" method="post">
+                <button type="submit">Tags</button>
+            </form>
         </td>
     </tr>
 

@@ -45,7 +45,7 @@ public class TouristController {
     }
 
     //Reminder, Byttet om på update og edit i opgaven.
-    @GetMapping("/update")
+    @PostMapping("/update")
     public String updateAttraction(@ModelAttribute TouristAttraction attraction, Model model) {
 
         if (attraction == null) {
@@ -63,13 +63,13 @@ public class TouristController {
         return "redirect:/attraction/list";
     }
 
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     public String deleteAttraction(@ModelAttribute TouristAttraction attraction) {
         touristService.deleteAttraction(attraction);
         return "redirect:/attraction/list";
     }
 
-    @GetMapping("/tags")
+    @PostMapping("/tags")
     public String getTagInfo(@ModelAttribute TouristAttraction attraction, Model model) {
         model.addAttribute("attraction", touristService.getAttraction(attraction));
         return "tags";
