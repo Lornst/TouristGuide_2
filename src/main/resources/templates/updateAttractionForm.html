@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Updater turistattraktion</h1>
-<form action="#" th:action="@{/attraction/{name}/edit(name = ${attraction.name})}" th:object="${attraction}" method="post">
+<form action="#" th:action="@{/attraction/edit}" th:object="${attraction}" method="post">
     <label>Nyt Navn:</label>
     <label>
         <input type="text" th:field="*{name}" required>

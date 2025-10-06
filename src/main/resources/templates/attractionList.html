@@ -15,13 +15,13 @@
         <td th:text="${attraction.name}"></td>
         <td th:text="${attraction.description}"></td>
         <td>
-            <a th:href="@{/attraction/{name}/update(name=${attraction.name})}"><button>Opdater</button></a>
+            <a th:href="@{/attraction/update}" th:object="attraction"><button>Opdater</button></a>
         </td>
         <td>
-            <a th:href="@{/attraction/{name}/delete(name=${attraction.name})}"><button>Slet</button></a>
+            <a th:href="@{/attraction/delete}" th:object="attraction"><button>Slet</button></a>
         </td>
         <td>
-            <a th:href="@{/attraction/{name}/tags(name=${attraction.name})}"><button>Tags</button></a>
+            <a th:href="@{/attraction/tags}" th:object="attraction"><button>Tags</button></a>
         </td>
     </tr>
 
