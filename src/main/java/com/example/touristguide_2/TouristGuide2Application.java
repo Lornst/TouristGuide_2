@@ -1,5 +1,6 @@
 package com.example.touristguide_2;
 
+import com.example.touristguide_2.repository.TouristRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,5 +10,4 @@ public class TouristGuide2Application {
     public static void main(String[] args) {
         SpringApplication.run(TouristGuide2Application.class, args);
     }
-
 }
