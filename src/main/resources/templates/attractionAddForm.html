@@ -23,9 +23,9 @@
     <label>By:</label>
     <label>
         <select th:field="*{city}">
-            <option th:each="cityName : ${cityList}"
-                    th:value="${cityName}"
-                    th:text="${cityName}">
+            <option th:each="city : ${cityList}"
+                    th:value="${city.getCityName}"
+                    th:text="${city.getCityName}">
             </option>
         </select>
     </label>
@@ -34,7 +34,7 @@
     <br>
     <div th:each="tag : ${tagList}">
         <input type="checkbox" th:field="*{tags}" th:value="${tag}" >
-        <label th:text="${tag}"></label>
+        <label th:text="${tag.getTagName}"></label>
     </div>
     <button type="submit">Add</button>
 </form>

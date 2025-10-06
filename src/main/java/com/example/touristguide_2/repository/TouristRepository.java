@@ -1,6 +1,9 @@
 package com.example.touristguide_2.repository;
 
-import com.example.touristguide_2.model.TouristAttraction;
+import com.example.touristguide_2.model.*;
+import com.example.touristguide_2.rowMapper.*;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -8,83 +11,51 @@ import java.util.List;
 
 @Repository
 public class TouristRepository {
-    ArrayList<TouristAttraction> attractionList = new ArrayList<>();
-    List<String> tagList = new ArrayList<>();
-    List<String> cityList = new ArrayList<>();
+    JdbcTemplate jdbcTemplate;
 
-    public TouristRepository() {
-        attractionList.add(new TouristAttraction("Tivoli", "Dansk forlystelsespark", "København", List.of("Koncert", "Runes tag")));
-        attractionList.add(new TouristAttraction("Rundetårn", "Tårn placeret i centrum af København", "København ", List.of("Koncert", "Yac tag")));
-        attractionList.add(new TouristAttraction("Parken", "Hjem til Danmarks bedste fodboldklub", "København", List.of("Hardcodet tag", "Koncert")));
-        attractionList.add(new TouristAttraction("Lille havfrue", "Historisk statue", "Hvidovre", List.of("Tag test 4", "Hej med dig min ven")));
-
-
-        tagList.add("Underholdning");
-        tagList.add("Koncert");
-        tagList.add("Børnevenligt");
-        tagList.add("Natur");
-        tagList.add("Museum");
-
-        cityList.add("København");
-        cityList.add("Stenløse");
-        cityList.add("Odense");
-        cityList.add("AAlborg");
-        cityList.add("Randers");
-        cityList.add("Hvidovre");
+    public TouristRepository(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ArrayList<TouristAttraction> getAll() {
-
-
-        return attractionList;
+    public List<Tag> getTagList(){
+        return jdbcTemplate.query("select * from tags", new TagRowMapper());
     }
 
-    public List<String> getTags() {
-
-        return tagList;
+    public List<City> getCityList(){
+        return jdbcTemplate.query("select * from cities", new CityRowMapper());
     }
 
-    public List<String> getCityList() {
-
-        return cityList;
+    public List<TouristAttraction> getAttractionList(){
+        return jdbcTemplate.query("select * from attractions", new AttractionRowMapper(jdbcTemplate));
     }
 
-    public TouristAttraction getAttractionByName(String name) {
-        for (TouristAttraction attraction : attractionList) {
-            if (attraction.getName().equalsIgnoreCase(name))
-                return attraction;
-        }
-        return null;
-    }
+    public TouristAttraction getAttraction(int id){
+        TouristAttraction attraction = new TouristAttraction();
 
-    public TouristAttraction addAttraction(TouristAttraction attraction) {
+        jdbcTemplate.queryForObject("select * from attractions where id = ?", new AttractionRowMapper(jdbcTemplate), id);
 
-        attractionList.add(attraction);
         return attraction;
     }
 
-    public TouristAttraction editAttraction(String nameID, TouristAttraction attraction) {
-        TouristAttraction tempAttraction = getAttractionByName(nameID);
+    public void addAttraction(TouristAttraction attraction){
+        jdbcTemplate.update("insert into attractions (name, description, cityKey) values (?,?,?)", attraction.getName(), attraction.getDescription(), attraction.getCity().getPostalCode());
 
-        if (tempAttraction != null) {
-            tempAttraction.setName(attraction.getName());
-            tempAttraction.setDescription(attraction.getDescription());
-            tempAttraction.setCity(attraction.getCity());
-            tempAttraction.setTags(attraction.getTags());
-
-            return tempAttraction;
+        for(Tag tag : attraction.getTags()){
+            jdbcTemplate.update("insert into attractiontags (attractionKey, tagKey) values (?,?)", attraction.getId(), tag.getId());
         }
-        return null;
     }
 
-    public TouristAttraction deleteAttraction(String name) {
-        if (!(name == null)) {
-            TouristAttraction tempAttraction = getAttractionByName(name);
-            attractionList.remove(tempAttraction);
+    public void  updateAttraction(TouristAttraction touristAttraction) throws DataAccessException {
+        String sql = "update attractions SET name= ?, age = ?, description = ?, WHERE id = ?, city = ?";
+        jdbcTemplate.update(sql, touristAttraction.getName(), touristAttraction.getDescription(), touristAttraction.getId(), touristAttraction.getCity());
 
-            return tempAttraction;
-        }
+    }
 
-        return null;
+    public void editAttraction(int id, TouristAttraction attraction){
+
+    }
+
+    public void deleteAttraction(int id){
+
     }
 }

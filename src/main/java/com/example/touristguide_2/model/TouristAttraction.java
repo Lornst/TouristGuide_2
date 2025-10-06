@@ -6,34 +6,45 @@ public class TouristAttraction {
 
     private String name;
     private String description;
-    private List<String> tags;
-    private String city;
+    private List<Tag> tags;
+    private City city;
+    private double id;
 
-    public TouristAttraction(String name, String description, String city, List<String> tags) {
+    public TouristAttraction(String name, String description, City city, List<Tag> tags, double id) {
         this.name = name;
         this.description = description;
         this.city = city;
         this.tags = tags;
+        this.id = id;
 
-    }
 
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public String getRegisterBy() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public TouristAttraction() {
+    }
+
+    public double getId() {
+        return id;
+    }
+
+    public void setId(double id) {
+        this.id = id;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 
     public void setName(String name) {
@@ -50,17 +61,12 @@ public class TouristAttraction {
         return description;
     }
 
-
     public String getDescription() {
 
         return description;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public String toString(){
-        return name+","+description+","+tags+","+city;
+    public String toString() {
+        return name + "," + description + "," + tags + "," + city;
     }
 }

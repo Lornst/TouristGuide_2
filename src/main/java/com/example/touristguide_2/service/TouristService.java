@@ -1,6 +1,6 @@
 package com.example.touristguide_2.service;
 
-import com.example.touristguide_2.model.TouristAttraction;
+import com.example.touristguide_2.model.*;
 import com.example.touristguide_2.repository.TouristRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,42 +16,34 @@ public class TouristService {
 
     }
 
-    public List<String> getTags() {
-
-        return touristRepository.getTags();
+    public List<Tag> getTagList() {
+        return touristRepository.getTagList();
     }
 
-    public List<TouristAttraction> getAllAttractions() {
+    public List<TouristAttraction> getAttractionList() {
 
-        return touristRepository.getAll();
+        return touristRepository.getAttractionList();
     }
 
-    public TouristAttraction getSpecificAttraction(String name) {
+    public TouristAttraction getAttraction(int id) {
 
-        return touristRepository.getAttractionByName(name);
+        return touristRepository.getAttraction(id);
     }
 
-    public TouristAttraction addAttraction(TouristAttraction attraction) {
-
-        return touristRepository.addAttraction(attraction);
-
+    public void addAttraction(TouristAttraction attraction) {
+        touristRepository.addAttraction(attraction);
     }
 
-    public TouristAttraction deleteAttraction(String name) {
+    public void deleteAttraction(int id) {
 
-        return touristRepository.deleteAttraction(name);
+        touristRepository.deleteAttraction(id);
     }
 
-    public TouristAttraction getAttractionByName(String name) {
-
-        return touristRepository.getAttractionByName(name);
+    public void editAttraction(int id, TouristAttraction attraction) {
+        touristRepository.editAttraction(id, attraction);
     }
 
-    public TouristAttraction editAttraction(String nameID,TouristAttraction attraction) {
-        return touristRepository.editAttraction(nameID, attraction);
-    }
-
-    public List<String> getCityList() {
+    public List<City> getCityList() {
         return touristRepository.getCityList();
     }
 
