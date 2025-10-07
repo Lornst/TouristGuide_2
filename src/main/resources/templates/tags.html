@@ -10,8 +10,7 @@
 <h1 th:text="${attraction.name} + ' Tags'"></h1>
 <table>
     <tr th:each="tag : ${attraction.tags}">
-
-        <td th:text="${tag}"></td>
+        <td th:text="${tagList.get(tag)}"></td>
     </tr>
 </table>
 <a

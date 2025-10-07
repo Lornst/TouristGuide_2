@@ -10,26 +10,36 @@
 <table>
     <th>Navn</th>
     <th>Beskrivelse</th>
-    <th></th>
+    <th>By</th>
     <tr th:each="attraction : ${list}">
         <td th:text="${attraction.name}"></td>
         <td th:text="${attraction.description}"></td>
+        <td th:text="${cityList.get(attraction.getCity())}"></td>
         <td>
-            <a th:href="@{/attraction/{id}/update(id=${attraction.id})}"><button>Opdater</button></a>
+            <form action="#" th:action="@{/attraction/update}" method="post">
+                <input type="hidden" name="id" th:value="${attraction.id}">
+                <button type="submit">Opdater</button>
+            </form>
         </td>
         <td>
-            <a th:href="@{/attraction/{id}/delete(id=${attraction.id})}"><button>Slet</button></a>
+            <form action="#" th:action="@{/attraction/delete}" method="post">
+                <input type="hidden" name="id" th:value="${attraction.id}">
+                <button type="submit">Slet</button>
+            </form>
         </td>
         <td>
-            <a th:href="@{/attraction/{id}/tags(id=${attraction.id})}"><button>Tags</button></a>
+            <form action="#" th:action="@{/attraction/tags}" method="post">
+                <input type="hidden" name="id" th:value="${attraction.id}">
+                <button type="submit">Tags</button>
+            </form>
         </td>
     </tr>
 
 </table>
-    <a th:href="@{/attraction/add}">
-        <button>
-            Add Attraction
-        </button>
-    </a>
+<a th:href="@{/attraction/add}">
+    <button>
+        Add Attraction
+    </button>
+</a>
 </body>
 </html>

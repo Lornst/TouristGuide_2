@@ -22,6 +22,7 @@ public class TouristController {
     public String getAllAttractions(Model model) {
         List<TouristAttraction> attractionList = touristService.getAttractionList();
         model.addAttribute("list", attractionList);
+        model.addAttribute("cityList", touristService.getCityList());
         return "attractionList";
     }
 
@@ -40,39 +41,40 @@ public class TouristController {
     @PostMapping("/save")
     public String saveAttraction(@ModelAttribute TouristAttraction attraction) {
         touristService.addAttraction(attraction);
-
         return "redirect:/attraction/list";
     }
 
     //Reminder, Byttet om på update og edit i opgaven.
-    @GetMapping("/{id}/update")
-    public String updateAttraction(@PathVariable int id, Model model) {
+    @PostMapping("/update")
+    public String updateAttraction(@BindParam int id, Model model) {
         TouristAttraction attraction = touristService.getAttraction(id);
 
         if (attraction == null) {
             throw new IllegalArgumentException("Invalid attraction name");
         }
+
         model.addAttribute("attraction", attraction);
         model.addAttribute("cityList", touristService.getCityList());
         model.addAttribute("tagList", touristService.getTagList());
         return "updateAttractionForm";
     }
 
-    @PostMapping("/{id}/edit")
-    public String editAttraction(@PathVariable int id) {
-        touristService.editAttraction(touristService.getAttraction(id));
+    @PostMapping("/edit")
+    public String editAttraction(@ModelAttribute TouristAttraction attraction) {
+        touristService.editAttraction(attraction);
         return "redirect:/attraction/list";
     }
 
-    @GetMapping("/{id}/delete")
-    public String deleteAttraction(@PathVariable int id) {
+    @PostMapping("/delete")
+    public String deleteAttraction(@BindParam int id) {
         touristService.deleteAttraction(id);
         return "redirect:/attraction/list";
     }
 
-    @GetMapping("/{id}/tags")
-    public String getTagInfo(@PathVariable int id, Model model) {
+    @PostMapping("/tags")
+    public String getTagInfo(@BindParam int id, Model model) {
         model.addAttribute("attraction", touristService.getAttraction(id));
+        model.addAttribute("tagList", touristService.getTagList());
         return "tags";
     }
 }

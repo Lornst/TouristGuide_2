@@ -23,6 +23,7 @@ public class AttractionRowMapper implements RowMapper<TouristAttraction> {
 
         touristAttraction.setName(rs.getString("attractions.name"));
         touristAttraction.setDescription(rs.getString("attractions.description"));
+        touristAttraction.setCity(rs.getInt("attractions.cityKey"));
         touristAttraction.setId(rs.getInt("attractions.id"));
 
         List<Integer> tagList = new ArrayList<>();

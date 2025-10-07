@@ -35,11 +35,7 @@ public class TouristRepository {
     }
 
     public TouristAttraction getAttraction(int id) {
-        TouristAttraction attraction = new TouristAttraction();
-
-        jdbcTemplate.queryForObject("select * from attractions where id = ?", new AttractionRowMapper(jdbcTemplate), id);
-
-        return attraction;
+        return jdbcTemplate.queryForObject("select * from attractions where id = ?", new AttractionRowMapper(jdbcTemplate), id);
     }
 
     public void addAttraction(TouristAttraction attraction) {
@@ -54,12 +50,12 @@ public class TouristRepository {
     }
 
     public void editAttraction(TouristAttraction touristAttraction) throws DataAccessException {
-        String sqlUpdate = "update attractions SET name= ?, age = ?, description = ?, city = ? WHERE id = ?";
+        String sqlUpdate = "update attractions SET name= ?, description = ?, cityKey = ? WHERE id = ?";
         jdbcTemplate.update(sqlUpdate,
                 touristAttraction.getName(),
                 touristAttraction.getDescription(),
-                touristAttraction.getId(),
-                touristAttraction.getCity());
+                touristAttraction.getCity(),
+                touristAttraction.getId());
     }
 
     public void deleteAttraction(int id) throws DataAccessException {
