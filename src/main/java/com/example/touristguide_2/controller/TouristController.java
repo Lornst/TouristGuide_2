@@ -38,9 +38,7 @@ public class TouristController {
     }
 
     @PostMapping("/save")
-    public String saveAttraction(@ModelAttribute TouristAttraction attraction, @ModelAttribute City city, @ModelAttribute List<Tag> tagList) {
-        attraction.setTags(tagList);
-        attraction.setCity(city);
+    public String saveAttraction(@ModelAttribute TouristAttraction attraction) {
         touristService.addAttraction(attraction);
 
         return "redirect:/attraction/list";
@@ -61,8 +59,8 @@ public class TouristController {
     }
 
     @PostMapping("/{id}/edit")
-    public String editAttraction(@PathVariable int id, TouristAttraction attraction) {
-        touristService.editAttraction(id, attraction);
+    public String editAttraction(@PathVariable int id) {
+        touristService.editAttraction(touristService.getAttraction(id));
         return "redirect:/attraction/list";
     }
 

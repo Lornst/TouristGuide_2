@@ -1,16 +1,17 @@
 package com.example.touristguide_2.model;
 
 import java.util.List;
+import java.util.Map;
 
 public class TouristAttraction {
 
     private String name;
     private String description;
-    private List<Tag> tags;
-    private City city;
-    private double id;
+    private List<Integer> tags;
+    private int city;
+    private int id;
 
-    public TouristAttraction(String name, String description, City city, List<Tag> tags, double id) {
+    public TouristAttraction(String name, String description, int city, List<Integer> tags, int id) {
         this.name = name;
         this.description = description;
         this.city = city;
@@ -23,27 +24,27 @@ public class TouristAttraction {
     public TouristAttraction() {
     }
 
-    public double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(double id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public List<Tag> getTags() {
+    public List<Integer> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<Integer> tags) {
         this.tags = tags;
     }
 
-    public City getCity() {
+    public int getCity() {
         return city;
     }
 
-    public void setCity(City city) {
+    public void setCity(int city) {
         this.city = city;
     }
 
@@ -57,12 +58,10 @@ public class TouristAttraction {
 
     public String setDescription(String newDescription) {
         description = newDescription;
-
         return description;
     }
 
     public String getDescription() {
-
         return description;
     }
 

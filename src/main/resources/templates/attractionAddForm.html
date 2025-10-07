@@ -13,10 +13,9 @@
         <input type="text" th:field="*{name}" required>
     </label>
     <br>
-
     <label>Beskrivelse:</label>
     <label>
-        <input type="text" th:field="*{description}" required>
+        <input type="text"  th:field="*{description}" required>
     </label>
     <br>
 
@@ -24,17 +23,17 @@
     <label>
         <select th:field="*{city}">
             <option th:each="city : ${cityList}"
-                    th:value="${city.getCityName}"
-                    th:text="${city.getCityName}">
+                    th:value="${city.key}"
+                    th:text="${city.value}">
             </option>
         </select>
     </label>
     <br>
     <label>Tags:</label>
     <br>
-    <div th:each="tag : ${tagList}">
-        <input type="checkbox" th:field="*{tags}" th:value="${tag}" >
-        <label th:text="${tag.getTagName}"></label>
+    <div th:each="tag : ${tagList}" >
+        <input type="checkbox" th:field="*{tags}" th:value="${tag.key}" name="id">
+        <label th:text="${tag.value}"></label>
     </div>
     <button type="submit">Add</button>
 </form>

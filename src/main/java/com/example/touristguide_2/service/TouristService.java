@@ -5,6 +5,7 @@ import com.example.touristguide_2.repository.TouristRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TouristService {
@@ -13,20 +14,17 @@ public class TouristService {
 
     public TouristService(TouristRepository touristRepository) {
         this.touristRepository = touristRepository;
-
     }
 
-    public List<Tag> getTagList() {
+    public Map<Integer, String> getTagList() {
         return touristRepository.getTagList();
     }
 
     public List<TouristAttraction> getAttractionList() {
-
         return touristRepository.getAttractionList();
     }
 
     public TouristAttraction getAttraction(int id) {
-
         return touristRepository.getAttraction(id);
     }
 
@@ -35,15 +33,14 @@ public class TouristService {
     }
 
     public void deleteAttraction(int id) {
-
         touristRepository.deleteAttraction(id);
     }
 
-    public void editAttraction(int id, TouristAttraction attraction) {
-        touristRepository.editAttraction(id, attraction);
+    public void editAttraction(TouristAttraction attraction) {
+        touristRepository.editAttraction(attraction);
     }
 
-    public List<City> getCityList() {
+    public Map<Integer, String> getCityList() {
         return touristRepository.getCityList();
     }
 
