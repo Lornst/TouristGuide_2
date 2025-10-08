@@ -60,7 +60,6 @@ public class TouristController {
 
     @PostMapping("/edit")
     public String editAttraction(TouristAttraction attraction) {
-        System.out.println(attraction);
         touristService.editAttraction(attraction);
         return "redirect:/attraction/list";
     }

@@ -15,30 +15,63 @@ public class TouristRepository {
 
     public TouristRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+
+        makeTables();
+        insertTableData();
     }
 
-    public void makeTable () {
+    public void makeTables() {
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS cities (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL UNIQUE
+                );
+                """);
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS cities (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), postalCode VARCHAR(255))");
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS tags (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL UNIQUE
+                );
+                """);
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS tags(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255))");
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS attractions (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    description VARCHAR(255) NOT NULL,
+                    cityKey INT NOT NULL
+                );
+                """);
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS attractions (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(225), description VARCHAR(225), cityKey VARCHAR(255))");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS attractiontags (attractionKey INT AUTO_INCREMENT PRIMARY KEY, tagKey INT)");
-
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS attractiontags (
+                    attractionKey INT NOT NULL,
+                    tagKey INT NOT NULL,
+                    PRIMARY KEY (attractionKey, tagKey)
+                );
+                """);
     }
 
-    public void insertAttractionData(){
+    public void insertTableData(){
+        jdbcTemplate.update("INSERT IGNORE INTO cities (name) VALUES (?)", "København");
+        jdbcTemplate.update("INSERT IGNORE INTO cities (name) VALUES (?)", "Aarhus");
+        jdbcTemplate.update("INSERT IGNORE INTO cities (name) VALUES (?)", "Odense");
+        jdbcTemplate.update("INSERT IGNORE INTO cities (name) VALUES (?)", "Aalborg");
+        jdbcTemplate.update("INSERT IGNORE INTO cities (name) VALUES (?)", "Esbjerg");
+        jdbcTemplate.update("INSERT IGNORE INTO cities (name) VALUES (?)", "Randers");
+        jdbcTemplate.update("INSERT IGNORE INTO cities (name) VALUES (?)", "Horsens");
 
-        jdbcTemplate.update("INSERT IGNORE INTO cities (id, name, postalCode) VALUES (?,?,?)", 1, "Halla", 2860);
-
-        jdbcTemplate.update("INSERT IGNORE INTO tags (id, name) VALUES (?,?)", 1, "family friendly");
-
-        jdbcTemplate.update("INSERT IGNORE INTO attractions (id, name, description, cityKey) VALUES (?, ?, ?, ?)", 1, "Yac", "Missekat", 1);
-
-        jdbcTemplate.update("INSERT IGNORE INTO attractiontags (attractionKey, tagKey) VALUES (?,?)", 1, 1);
-        
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Sjov");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Uhyggelig");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Familievenlig");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Historisk");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Romantisk");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Natur");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Kunst");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Eventyr");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Mad og drikke");
+        jdbcTemplate.update("INSERT IGNORE INTO tags (name) VALUES (?)", "Action");
     }
 
     public Map<Integer, String> getTagList() {
