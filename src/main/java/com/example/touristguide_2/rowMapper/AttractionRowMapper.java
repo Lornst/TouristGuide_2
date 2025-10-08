@@ -24,6 +24,7 @@ public class AttractionRowMapper implements RowMapper<TouristAttraction> {
         touristAttraction.setName(rs.getString("attractions.name"));
         touristAttraction.setDescription(rs.getString("attractions.description"));
         touristAttraction.setId(rs.getInt("attractions.id"));
+        touristAttraction.setCity(rs.getInt("attractions.cityKey"));
 
         List<Integer> tagList = new ArrayList<>();
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet("select * from attractiontags where attractionKey = ?", rs.getInt("id"));

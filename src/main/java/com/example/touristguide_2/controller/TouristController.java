@@ -48,19 +48,20 @@ public class TouristController {
     @GetMapping("/{id}/update")
     public String updateAttraction(@PathVariable int id, Model model) {
         TouristAttraction attraction = touristService.getAttraction(id);
-
         if (attraction == null) {
             throw new IllegalArgumentException("Invalid attraction name");
         }
+
         model.addAttribute("attraction", attraction);
         model.addAttribute("cityList", touristService.getCityList());
         model.addAttribute("tagList", touristService.getTagList());
         return "updateAttractionForm";
     }
 
-    @PostMapping("/{id}/edit")
-    public String editAttraction(@PathVariable int id) {
-        touristService.editAttraction(touristService.getAttraction(id));
+    @PostMapping("/edit")
+    public String editAttraction(TouristAttraction attraction) {
+        System.out.println(attraction);
+        touristService.editAttraction(attraction);
         return "redirect:/attraction/list";
     }
 
@@ -73,6 +74,7 @@ public class TouristController {
     @GetMapping("/{id}/tags")
     public String getTagInfo(@PathVariable int id, Model model) {
         model.addAttribute("attraction", touristService.getAttraction(id));
+        model.addAttribute("tagList", touristService.getTagList());
         return "tags";
     }
 }
