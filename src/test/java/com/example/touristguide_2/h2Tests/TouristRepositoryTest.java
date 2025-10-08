@@ -32,10 +32,16 @@ public class TouristRepositoryTest {
 
     @Test
     void insertAndReadBack(){
-        repo.addAttraction(new TouristAttraction("Rundetårn", "Et meget stort tårn", 4, List.of(1, 3), 3 ));
-        var rundetårn = repo.getAttraction(3);
-        assertThat(rundetårn).isNotNull();
-        assertThat(rundetårn.getName()).isEqualTo("Rundetårn");
+        TouristAttraction attraction = new TouristAttraction();
+        attraction.setName("Rundetårn");
+        attraction.setDescription("Et meget stort tårn");
+        attraction.setCity(4);
+        attraction.setTags(List.of(1, 3));
+        repo.addAttraction(attraction);
+        //repo.addAttraction(new TouristAttraction("Rundetårn", "Et meget stort tårn", 4, List.of(1, 3), 3 ));
+        var attractionGetted = repo.getAttraction(3);
+        assertThat(attractionGetted).isNotNull();
+        assertThat(attractionGetted.getName()).isEqualTo("Rundetårn");
 
     }
 }

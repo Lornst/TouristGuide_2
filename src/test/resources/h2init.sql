@@ -2,11 +2,10 @@ DROP TABLE IF EXISTS attractiontags;
 DROP TABLE IF EXISTS attractions;
 
 CREATE TABLE attractions (
-                             id INT PRIMARY KEY,
+                             id INT AUTO_INCREMENT PRIMARY KEY,
                              name VARCHAR(100) NOT NULL,
                              description VARCHAR(150),
-                             cityKey INT,
-                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                             cityKey INT
 );
 
 CREATE TABLE attractiontags (
