@@ -5,17 +5,16 @@
     <title>Tags</title>
     <link th:href="@{/main.css}" rel="stylesheet">
 </head>
-
 <body>
 <h1 th:text="${attraction.name} + ' Tags'"></h1>
 <table>
-    <tr th:each="tag : ${attraction.tags}">
 
-        <td th:text="${tag}"></td>
+    <tr th:each="tag : ${attraction.tags}">
+        <td th:text="${tagList.get(tag)}"></td>
+
     </tr>
 </table>
-<a
-    href="/attraction/list"><button>Tilbage</button>
+<a href="/attraction/list"><button>Tilbage</button>
 </a>
 </body>
 </html>
