@@ -4,11 +4,8 @@ import com.example.touristguide_2.model.*;
 import com.example.touristguide_2.rowMapper.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +15,30 @@ public class TouristRepository {
 
     public TouristRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void makeTable () {
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS cities (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), postalCode VARCHAR(255))");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS tags(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255))");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS attractions (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(225), description VARCHAR(225), cityKey VARCHAR(255))");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS attractiontags (attractionKey INT AUTO_INCREMENT PRIMARY KEY, tagKey INT)");
+
+    }
+
+    public void insertAttractionData(){
+
+        jdbcTemplate.update("INSERT IGNORE INTO cities (id, name, postalCode) VALUES (?,?,?)", 1, "Halla", 2860);
+
+        jdbcTemplate.update("INSERT IGNORE INTO tags (id, name) VALUES (?,?)", 1, "family friendly");
+
+        jdbcTemplate.update("INSERT IGNORE INTO attractions (id, name, description, cityKey) VALUES (?, ?, ?, ?)", 1, "Yac", "Missekat", 1);
+
+        jdbcTemplate.update("INSERT IGNORE INTO attractiontags (attractionKey, tagKey) VALUES (?,?)", 1, 1);
+        
     }
 
     public Map<Integer, String> getTagList() {
